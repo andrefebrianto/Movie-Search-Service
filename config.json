@@ -1,0 +1,23 @@
+{
+    "debug": true,
+    "httpServer": {
+        "port": ":9090"
+    },
+    "grpcServer": {
+        "port": ":8080"
+    },
+    "context": {
+        "timeout": 2
+    },
+    "mysql": {
+        "host": "localhost",
+        "port": "3306",
+        "user": "user",
+        "pass": "password",
+        "name": "db"
+    },
+    "omdbApiConfig": {
+        "baseUrl": "http://www.omdbapi.com/",
+        "apiKey": "faf7e5bb"
+    }
+}
