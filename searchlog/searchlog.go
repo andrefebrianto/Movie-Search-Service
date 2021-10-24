@@ -6,9 +6,10 @@ import (
 )
 
 type SearchLog struct {
-	KeyWord   string
-	Page      int
-	Timestamp time.Time
+	Url          string
+	ResponseData string
+	Status       int
+	Timestamp    time.Time
 }
 
 type SearchLogUseCase interface {
