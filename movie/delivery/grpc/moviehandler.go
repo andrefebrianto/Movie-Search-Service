@@ -28,12 +28,12 @@ func (handler MovieGrpcServer) SearchMovies(contex context.Context, param *model
 		return nil, errors.New("internal server error")
 	}
 
-	var result *model.MovieSearch
+	var result = new(model.MovieSearch)
 
 	result.TotalResults = int32(movieMetaDatas.TotalResults)
 	result.SearchResult = make([]*model.MovieSearch_MovieMetaData, 0)
 
-	for _, metaData := range result.SearchResult {
+	for _, metaData := range movieMetaDatas.SearchResult {
 		entry := &model.MovieSearch_MovieMetaData{
 			Title:  metaData.Title,
 			Year:   metaData.Year,
@@ -56,7 +56,7 @@ func (handler MovieGrpcServer) GetMovieDetail(ctx context.Context, param *model.
 		return nil, errors.New("internal server error")
 	}
 
-	var result *model.Movie
+	var result = new(model.Movie)
 
 	result.Title = movie.Title
 	result.Year = movie.Year
