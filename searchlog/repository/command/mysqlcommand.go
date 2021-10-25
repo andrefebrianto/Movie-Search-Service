@@ -17,7 +17,7 @@ func CreateCassandraCommandRepository(mysqlClient *sql.DB) MysqlCommandRepositor
 }
 
 func (repo MysqlCommandRepository) Create(ctx context.Context, searchLog *searchlog.SearchLog) error {
-	queryStatement := `INSERT  searchlog SET url=? , response_data=? , status, timestamp=?`
+	queryStatement := `INSERT searchlog SET url=?, response_data=?, status=?, timestamp=?`
 	statement, err := repo.db.PrepareContext(ctx, queryStatement)
 	if err != nil {
 		return err
