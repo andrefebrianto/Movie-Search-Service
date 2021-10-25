@@ -63,14 +63,15 @@ func main() {
 	searchLogMySqlCommandRepository := searchlogcommand.CreateMySqlCommandRepository(mysql.GetConnection())
 	searchLogUseCase := searchlogusecase.CreateSearchLogUseCase(searchLogMySqlCommandRepository, timeoutInSecond)
 
-	var movieDataProvider omdbapi.MovieDataProvider
-	err := GlobalConfig.UnmarshalKey("omdbApiConfig", &movieDataProvider)
+	var omdbApiConfig omdbapi.OmdbConfig
+	err := GlobalConfig.UnmarshalKey("omdbApiConfig", &omdbApiConfig)
 	if err != nil {
 		panic(err)
 	}
-	movieDataProvider.SearchLog = searchLogUseCase
 
-	movieUseCase := movieusecase.CreateMovieUseCase(movieDataProvider, timeoutInSecond)
+	omdbApi := omdbapi.CreateOmdbApiClient(omdbApiConfig, searchLogUseCase, &http.Client{})
+
+	movieUseCase := movieusecase.CreateMovieUseCase(omdbApi, timeoutInSecond)
 
 	// Init handler
 	moviehttphandler.HandleHttpRequest(httpServer, movieUseCase)
