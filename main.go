@@ -68,8 +68,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	movieDataProvider.SearchLog = searchLogUseCase
 
-	movieUseCase := movieusecase.CreateMovieUseCase(searchLogUseCase, movieDataProvider, timeoutInSecond)
+	movieUseCase := movieusecase.CreateMovieUseCase(movieDataProvider, timeoutInSecond)
 
 	// Init handler
 	moviehttphandler.HandleHttpRequest(httpServer, movieUseCase)
