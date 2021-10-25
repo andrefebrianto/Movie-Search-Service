@@ -28,8 +28,8 @@ func HandleHttpRequest(ech *echo.Echo, movieUseCase movie.MovieUseCase) {
 
 func (handler MovieHttpHandler) SearchMovies(context echo.Context) error {
 	searchKeyword := context.QueryParam("searchword")
-	page, _ := strconv.Atoi(context.QueryParam("pagination"))
-	if searchKeyword == "" || page == 0 {
+	page, err := strconv.Atoi(context.QueryParam("pagination"))
+	if searchKeyword == "" || page <= 0 || err != nil {
 		return context.JSON(http.StatusBadRequest, HttpResponseObject{Message: "Invalid input parameter"})
 	}
 
