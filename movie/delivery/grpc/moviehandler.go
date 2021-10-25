@@ -16,8 +16,7 @@ type MovieGrpcServer struct {
 
 func (handler MovieGrpcServer) SearchMovies(contex context.Context, param *model.MovieKeywordAndPage) (*model.MovieSearch, error) {
 	if param.Keyword == "" || param.Page == 0 {
-		// return context.JSON(http.StatusBadRequest, HttpResponseObject{Message: "Invalid input parameter"})
-		return nil, errors.New("")
+		return nil, errors.New("invalid input parameter")
 	}
 
 	movieMetaDatas, err := handler.MovieUseCase.SearchMovies(contex, param.Keyword, int(param.Page))
