@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestCreateSearchLog(t *testing.T) {
+func TestCreate(t *testing.T) {
 	mockSearchLogCommandRepository := new(mocks.SearchLogCommandRepository)
 	timeout := time.Duration(2 * time.Second)
 
