@@ -47,6 +47,10 @@ func (handler MovieGrpcServer) SearchMovies(contex context.Context, param *model
 }
 
 func (handler MovieGrpcServer) GetMovieDetail(ctx context.Context, param *model.MovieId) (*model.Movie, error) {
+	if param.Id == "" {
+		return nil, errors.New("invalid input parameter")
+	}
+
 	movie, err := handler.MovieUseCase.GetMovieDetail(ctx, param.Id)
 	if err != nil {
 		if err.Error() == "not found" {
