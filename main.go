@@ -60,7 +60,7 @@ func main() {
 	httpServer.GET("/", responsePing)
 
 	timeoutInSecond := time.Duration(GlobalConfig.GetInt("context.timeout") * int(time.Second))
-	searchLogMySqlCommandRepository := searchlogcommand.CreateCassandraCommandRepository(mysql.GetConnection())
+	searchLogMySqlCommandRepository := searchlogcommand.CreateMySqlCommandRepository(mysql.GetConnection())
 	searchLogUseCase := searchlogusecase.CreateSearchLogUseCase(searchLogMySqlCommandRepository, timeoutInSecond)
 
 	var movieDataProvider omdbapi.MovieDataProvider

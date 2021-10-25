@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"database/sql"
-	"time"
 
 	"github.com/andrefebrianto/Search-Movie-Service/searchlog"
 )
@@ -12,7 +11,7 @@ type MysqlCommandRepository struct {
 	db *sql.DB
 }
 
-func CreateCassandraCommandRepository(mysqlClient *sql.DB) MysqlCommandRepository {
+func CreateMySqlCommandRepository(mysqlClient *sql.DB) MysqlCommandRepository {
 	return MysqlCommandRepository{db: mysqlClient}
 }
 
@@ -24,7 +23,7 @@ func (repo MysqlCommandRepository) Create(ctx context.Context, searchLog *search
 	}
 	defer statement.Close()
 
-	_, err = statement.ExecContext(ctx, searchLog.Url, searchLog.ResponseData, searchLog.Status, time.Now().Local())
+	_, err = statement.ExecContext(ctx, searchLog.Url, searchLog.ResponseData, searchLog.Status, searchLog.Timestamp)
 	if err != nil {
 		return err
 	}
