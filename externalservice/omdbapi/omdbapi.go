@@ -4,15 +4,19 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/andrefebrianto/Search-Movie-Service/movie"
+	"github.com/andrefebrianto/Search-Movie-Service/searchlog"
 )
 
 type MovieDataProvider struct {
-	BaseUrl string `json:"baseUrl"`
-	ApiKey  string `json:"apiKey"`
+	BaseUrl   string `json:"baseUrl"`
+	ApiKey    string `json:"apiKey"`
+	SearchLog searchlog.SearchLogUseCase
 }
 
 type SearchResult struct {
@@ -44,6 +48,7 @@ func (dataProvider MovieDataProvider) SearchMovies(ctx context.Context, keyword 
 	if err != nil {
 		return nil, err
 	}
+
 	if response.StatusCode != 200 {
 		return nil, errors.New("internal server error")
 	}
@@ -53,6 +58,22 @@ func (dataProvider MovieDataProvider) SearchMovies(ctx context.Context, keyword 
 	if err := json.NewDecoder(response.Body).Decode(&responseData); err != nil {
 		return nil, err
 	}
+
+	go func() {
+		contex, cancel := context.WithTimeout(context.Background(), time.Duration(2*time.Second))
+		defer cancel()
+		plainResponseData, _ := json.Marshal(responseData)
+		searchLog := searchlog.SearchLog{
+			Url:          request.RequestURI,
+			Status:       response.StatusCode,
+			ResponseData: string(plainResponseData),
+			Timestamp:    time.Now().Local(),
+		}
+		err := dataProvider.SearchLog.Create(contex, &searchLog)
+		if err != nil {
+			fmt.Println("Search Log Database Error: ", err)
+		}
+	}()
 
 	if responseData.Error == "Movie not found!" {
 		return nil, errors.New("not found")
@@ -84,6 +105,7 @@ func (dataProvider MovieDataProvider) GetMovieDetail(ctx context.Context, imdbId
 	if err != nil {
 		return nil, err
 	}
+
 	if response.StatusCode != 200 {
 		return nil, errors.New("internal server error")
 	}
@@ -93,6 +115,22 @@ func (dataProvider MovieDataProvider) GetMovieDetail(ctx context.Context, imdbId
 	if err := json.NewDecoder(response.Body).Decode(&responseData); err != nil {
 		return nil, err
 	}
+
+	go func() {
+		contex, cancel := context.WithTimeout(context.Background(), time.Duration(2*time.Second))
+		defer cancel()
+		plainResponseData, _ := json.Marshal(responseData)
+		searchLog := searchlog.SearchLog{
+			Url:          request.URL.String(),
+			Status:       response.StatusCode,
+			ResponseData: string(plainResponseData),
+			Timestamp:    time.Now().Local(),
+		}
+		err := dataProvider.SearchLog.Create(contex, &searchLog)
+		if err != nil {
+			fmt.Println("Search Log Database Error: ", err)
+		}
+	}()
 
 	if responseData.Error == "Incorrect IMDb ID." {
 		return nil, errors.New("not found")
