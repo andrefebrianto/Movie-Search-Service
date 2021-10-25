@@ -5,6 +5,7 @@ go 1.16
 require (
 	cloud.google.com/go/bigquery v1.4.0 // indirect
 	cloud.google.com/go/firestore v1.1.1 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/antihax/optional v1.0.0 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
